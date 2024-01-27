@@ -1,20 +1,14 @@
-import Edit from '@/components/bookmark/Edit';
-import Remove from '@/components/bookmark/Remove';
+import Edit from '@/components/global/Edit';
+import Remove from '@/components/global/Remove';
 import Links from '@/components/bookmark/Links';
 import { useState } from 'react';
 import Link from 'next/link';
+import { generateRandomId } from '@/components/utils/RandomId';
 
 interface BookmarkProps {
   Title: string;
   url: string;
   id: string;
-}
-
-function generateRandomId() {
-  const timestamp = new Date().getTime().toString(16);
-  const randomString1 = Math.random().toString(36).substring(2, 8);
-  const randomString2 = Math.random().toString(36).substring(2, 8);
-  return timestamp + randomString1 + randomString2;
 }
 
 const Bookmarks = () => {
@@ -58,9 +52,11 @@ const Bookmarks = () => {
     setEditTitle('');
     setEditUrl('');
 
-    setEditId(id);
-    setEditTitle(title);
-    setEditUrl(url);
+    if (editId !== id) {
+      setEditId(id);
+      setEditTitle(title);
+      setEditUrl(url);
+    }
   }
 
   const handleEditBookmark = () => {
@@ -140,7 +136,7 @@ const Bookmarks = () => {
       <div className="my-4 mx-2">
         {bookmarks.map((bookmark, index) => (
           <div className='rounded my-2 p-6 bg-[#f0f3ff] flex flex-row items-center justify-between space-x-3' key={index}>
-            <div className='flex flex-row space-x-3'>
+            <div className='flex flex-row space-x-3 justify-center items-center'>
               <Link href={bookmark.url} target='_blank' className='hover:bg-gray-300 rounded-full p-2'>
                 <Links />
               </Link>
@@ -176,7 +172,7 @@ const Bookmarks = () => {
                 </div>
                 :
                 <div className='flex flex-col'>
-                  <h2 className='font-medium'>{bookmark.Title}</h2>
+                  <h2 className='font-medium break-all'>{bookmark.Title}</h2>
                   <p className='text-gray-500 break-all'>{bookmark.url}</p>
                 </div>}
             </div>
