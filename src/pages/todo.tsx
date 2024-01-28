@@ -1,7 +1,8 @@
 import Edit from "@/components/global/Edit";
 import Remove from "@/components/global/Remove";
-import GetDate from "@/components/todo/Date";
+import GetDate from "@/components/global/Date";
 import Fav from "@/components/todo/Fav";
+import Load from "@/components/utils/Load";
 import { generateRandomId } from "@/components/utils/RandomId";
 import { useState } from "react";
 
@@ -20,6 +21,7 @@ const Todo = () => {
     const [editTitle, setEditTitle] = useState('');
     const [titleError, setTitleError] = useState<string | null>(null);
     const [editTitleError, setEditTitleError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
 
     const handleAddTodo = () => {
         setTitleError(null);
@@ -29,8 +31,11 @@ const Todo = () => {
         }
 
         if (title) {
+            setLoading(true);
             setTodos(prevTodos => [...prevTodos, { Title: title, fav: false, id: generateRandomId(), date: GetDate() }]);
             setTitle('');
+            setLoading(false);
+
         }
     };
 
@@ -52,6 +57,7 @@ const Todo = () => {
         }
 
         if (editTitle) {
+            setLoading(true);
             setTodos(prevTodos => {
                 const updatedTodos = prevTodos.map(todo =>
                     todo.id === editId ? { ...todo, Title: editTitle, date: GetDate() } : todo
@@ -60,30 +66,55 @@ const Todo = () => {
                 setEditId('');
                 setEditTitle('');
 
+                setLoading(false);
+
+
                 return updatedTodos;
             });
         }
     }
 
     const handleFav = (id: string) => {
+        setLoading(true);
         setTodos(prevTodos => {
             const updatedTodos = prevTodos.map(todo =>
                 todo.id === id ? { ...todo, fav: !todo.fav } : todo
             );
+
+            setLoading(false);
 
             return updatedTodos;
         });
     }
 
     const handleRemove = (id: string) => {
+        setLoading(true);
         setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id))
+        setLoading(false);
+
     }
 
-    const sortedTodos = [...todos].sort((a, b) => (b.fav ? 1 : 0) - (a.fav ? 1 : 0));
+    const sortedTodos = [...todos].sort((a, b) => {
+        if (b.fav && !a.fav) {
+            return 1;
+        } else if (!b.fav && a.fav) {
+            return -1;
+        } else {
+            return 0;
+        }
+    });
 
     return (
         <div className='flex flex-col justify-center items-center'>
             <h2 className='text-6xl xse:text-4xl font-bold mt-3 mb-5 text-indigo-500 italic'>Todos</h2>
+
+            {loading && (
+                <div
+                    className="fixed top-0 z-40 left-0 w-screen h-screen bg-gray-900 opacity-95 flex flex-col space-y-2 items-center justify-center"
+                >
+                    <Load className='w-9 h-9 fill-white' />
+                </div>
+            )}
 
             <div className="mb-4">
                 <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="title">

@@ -33,7 +33,7 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="bg-black p-4 text-white shadow-md relative flex items-center">
+    <header className="bg-black p-4 z-50 text-white shadow-md relative flex items-center">
       {loggingOut && (
         <div
           className="fixed top-0 left-0 w-full h-full bg-gray-950 opacity-95 flex flex-col space-y-2 items-center justify-center"
@@ -78,6 +78,9 @@ const Header = () => {
           </Link>
           <Link onClick={closeMenu} href="/bookmarks">
             <h1 className="block hover:bg-blue-500 font-medium hover:rounded-md hover:text-white px-4 py-2 text-gray-800">Bookmarks</h1>
+          </Link>
+          <Link onClick={closeMenu} href="/expenses">
+            <h1 className="block hover:bg-blue-500 font-medium hover:rounded-md hover:text-white px-4 py-2 text-gray-800">Expenses</h1>
           </Link>
         </div>
       </div>

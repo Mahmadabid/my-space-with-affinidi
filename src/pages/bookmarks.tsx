@@ -4,6 +4,7 @@ import Links from '@/components/bookmark/Links';
 import { useState } from 'react';
 import Link from 'next/link';
 import { generateRandomId } from '@/components/utils/RandomId';
+import Load from '@/components/utils/Load';
 
 interface BookmarkProps {
   Title: string;
@@ -22,6 +23,7 @@ const Bookmarks = () => {
   const [titleError, setTitleError] = useState<string | null>(null);
   const [editUrlError, setEditURLError] = useState<string | null>(null);
   const [editTitleError, setEditTitleError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const isValidUrl = (inputUrl: string) => {
     const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
@@ -41,9 +43,11 @@ const Bookmarks = () => {
     }
 
     if (title && isValidUrl(url)) {
+      setLoading(true);
       setBookmarks(prevBookmarks => [...prevBookmarks, { Title: title, url, id: generateRandomId() }]);
       setUrl('');
       setTitle('');
+      setLoading(false);
     }
   };
 
@@ -72,6 +76,7 @@ const Bookmarks = () => {
     }
 
     if (editTitle && isValidUrl(editUrl)) {
+      setLoading(true);
       setBookmarks(prevBookmarks => {
         const updatedBookmarks = prevBookmarks.map(bookmark =>
           bookmark.id === editId ? { ...bookmark, Title: editTitle, url: editUrl } : bookmark
@@ -81,18 +86,30 @@ const Bookmarks = () => {
         setEditTitle('');
         setEditUrl('');
 
+        setLoading(false);
+
         return updatedBookmarks;
       });
     }
   }
 
   const handleRemove = (id: string) => {
-    setBookmarks(prevBookmarks => prevBookmarks.filter(bookmark => bookmark.id !== id))
+    setLoading(true);
+    setBookmarks(prevBookmarks => prevBookmarks.filter(bookmark => bookmark.id !== id));
+    setLoading(false);
   }
 
   return (
     <div className='flex flex-col justify-center items-center'>
       <h2 className='text-6xl xse:text-4xl font-bold mt-3 mb-5 text-sky-500 italic'>Bookmarks</h2>
+
+      {loading && (
+        <div
+          className="fixed top-0 z-40 left-0 w-full h-full bg-gray-900 opacity-95 flex flex-col space-y-2 items-center justify-center"
+        >
+          <Load className='w-9 h-9 fill-white' />
+        </div>
+      )}
 
       <div className="mb-4">
         <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="title">
