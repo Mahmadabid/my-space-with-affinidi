@@ -4,26 +4,51 @@ import GetDate from "@/components/global/Date";
 import Fav from "@/components/todo/Fav";
 import Load from "@/components/utils/Load";
 import { generateRandomId } from "@/components/utils/RandomId";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-interface TodoProps {
-    Title: string;
+export interface TodoProps {
+    title: string;
     fav: boolean;
     id: string;
     date: string;
+    owner: string;
 }
 
 const Todo = () => {
 
     const [title, setTitle] = useState('');
+    const [fetchData, setFetchData] = useState(false);
     const [todos, setTodos] = useState<TodoProps[]>([]);
     const [editId, setEditId] = useState('');
     const [editTitle, setEditTitle] = useState('');
     const [titleError, setTitleError] = useState<string | null>(null);
     const [editTitleError, setEditTitleError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const Owner = 'aaaaa1'
 
-    const handleAddTodo = () => {
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            const res = await fetch(`/api/todo?owner=${Owner}`, {
+                method: 'GET',
+            });
+
+            const data = await res.json();
+
+            if (data.length > 0) {
+                setTodos(data);
+                setLoading(false);
+            }
+            else {
+                setTodos([]);
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [fetchData]);
+
+    const handleAddTodo = async () => {
         setTitleError(null);
 
         if (!title) {
@@ -31,11 +56,27 @@ const Todo = () => {
         }
 
         if (title) {
-            setLoading(true);
-            setTodos(prevTodos => [...prevTodos, { Title: title, fav: false, id: generateRandomId(), date: GetDate() }]);
-            setTitle('');
-            setLoading(false);
+            try {
+                setLoading(true);
+                const res = await fetch('api/todo', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ title, fav: false, id: generateRandomId(), date: GetDate(), owner: Owner }),
+                });
 
+                if (!res.ok) {
+                    throw new Error('Failed to add todo');
+                }
+
+                setTitle('');
+                setFetchData(prev => !prev);
+            } catch (error) {
+                console.error('Error adding todo:', error);
+            } finally {
+                setLoading(false);
+            }
         }
     };
 
@@ -49,7 +90,7 @@ const Todo = () => {
         }
     }
 
-    const handleEditTodo = () => {
+    const handleEditTodo = async (id: string) => {
         setEditTitleError(null);
 
         if (!editTitle) {
@@ -57,44 +98,78 @@ const Todo = () => {
         }
 
         if (editTitle) {
-            setLoading(true);
-            setTodos(prevTodos => {
-                const updatedTodos = prevTodos.map(todo =>
-                    todo.id === editId ? { ...todo, Title: editTitle, date: GetDate() } : todo
-                );
+            try {
+                setLoading(true);
+                const res = await fetch('api/todo', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ title: editTitle, id, date: GetDate(), edit: 'edit' }),
+                });
 
+                if (!res.ok) {
+                    throw new Error('Failed to edit todo');
+                }
+
+                setFetchData(prev => !prev);
+            } catch (error) {
+                console.error('Error editing todo:', error);
+            } finally {
                 setEditId('');
                 setEditTitle('');
-
                 setLoading(false);
-
-
-                return updatedTodos;
-            });
+            }
         }
     }
 
-    const handleFav = (id: string) => {
-        setLoading(true);
-        setTodos(prevTodos => {
-            const updatedTodos = prevTodos.map(todo =>
-                todo.id === id ? { ...todo, fav: !todo.fav } : todo
-            );
+    const handleFav = async (todo: TodoProps) => {
+        try {
+            setLoading(true);
+            const res = await fetch('api/todo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ fav: !todo.fav, id: todo.id, edit: 'fav' }),
+            });
 
+            if (!res.ok) {
+                throw new Error('Failed to fav todo');
+            }
+
+            setFetchData(prev => !prev);
+        } catch (error) {
+            console.error('Error favorite todo:', error);
+        } finally {
             setLoading(false);
-
-            return updatedTodos;
-        });
+        }
     }
 
-    const handleRemove = (id: string) => {
+    const handleRemove = async (id: string) => {
         setLoading(true);
-        setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id))
-        setLoading(false);
+        try {
+            const res = await fetch(`/api/todo/`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id }),
+            });
 
-    }
+            if (!res.ok) {
+                throw new Error('Failed to delete todo');
+            }
 
-    const sortedTodos = [...todos].sort((a, b) => {
+        } catch (error) {
+            console.error('Error removing todo:', error);
+        } finally {
+            setLoading(false);
+            setFetchData(prev => !prev)
+        }
+    };
+
+    const sortedTodos = [...todos].slice().reverse().sort((a, b) => {
         if (b.fav && !a.fav) {
             return 1;
         } else if (!b.fav && a.fav) {
@@ -144,7 +219,7 @@ const Todo = () => {
                     <div className='rounded my-2 p-4 bg-[#ebecff] flex flex-row items-center justify-between space-x-3' key={index}>
                         <div className='flex flex-row space-x-3 justify-center items-center'>
 
-                            <button onClick={() => handleFav(todo.id)} className='hover:bg-gray-300 rounded-full p-2'>
+                            <button onClick={() => handleFav(todo)} className='hover:bg-gray-300 rounded-full p-2'>
                                 <Fav color={todo.fav ? '#3f51b5' : ''} />
                             </button>
 
@@ -163,19 +238,19 @@ const Todo = () => {
 
                                     <button
                                         className="bg-teal-500 hover:bg-teal-600 my-2 w-36 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                        onClick={handleEditTodo}
+                                        onClick={() => handleEditTodo(todo.id)}
                                     >
                                         Edit Todo
                                     </button>
                                 </div>
                                 :
                                 <div className='flex flex-col'>
-                                    <h2 className='font-medium break-all'>{todo.Title}</h2>
+                                    <h2 className='font-medium break-all'>{todo.title}</h2>
                                     <p className="text-gray-500 break-all">{todo.date}</p>
                                 </div>}
                         </div>
                         <div>
-                            <button onClick={() => handleEdit(todo.Title, todo.id)} className='hover:bg-gray-300 rounded-full p-2'>
+                            <button onClick={() => handleEdit(todo.title, todo.id)} className='hover:bg-gray-300 rounded-full p-2'>
                                 <Edit />
                             </button>
                             <button onClick={() => handleRemove(todo.id)} className='hover:bg-gray-300 rounded-full p-2'>

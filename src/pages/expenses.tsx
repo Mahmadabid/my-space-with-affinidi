@@ -2,27 +2,57 @@ import GetDate from "@/components/global/Date";
 import Remove from "@/components/global/Remove";
 import Load from "@/components/utils/Load"
 import { generateRandomId } from "@/components/utils/RandomId";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-interface TransactionProps {
-  Title: string;
+export interface TransactionProps {
+  title: string;
   id: string;
   date: string;
   amount: number;
   type: 'income' | 'expense';
+  owner: string;
 }
 
 const Expenses = () => {
 
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState(0);
+  const [fetchData, setFetchData] = useState(false);
   const [title, setTitle] = useState('');
   const [amountError, setAmountError] = useState<string | null>(null);
   const [titleError, setTitleError] = useState<string | null>(null);
   const [type, setType] = useState<'income' | 'expense'>('income');
   const [transactions, setTransactions] = useState<TransactionProps[]>([]);
+  const Owner = 'aaaaa1';
 
-  const handleAddTransaction = () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const res = await fetch(`/api/expense?owner=${Owner}`, {
+        method: 'GET',
+      });
+
+      const data = await res.json();
+
+      if (data.length > 0) {
+        const formattedData = data.map((item: { amount: string; }) => ({
+          ...item,
+          amount: parseFloat(item.amount),
+        }));
+
+        setTransactions(formattedData);
+        setLoading(false);
+      }
+      else {
+        setTransactions([]);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [fetchData]);
+
+  const handleAddTransaction = async () => {
     setTitleError(null);
     setAmountError(null);
 
@@ -35,36 +65,81 @@ const Expenses = () => {
     }
 
     if (title && amount > 0) {
-      setLoading(true);
-      setTransactions(prevTransactions => [...prevTransactions, { Title: title, amount, id: generateRandomId(), date: GetDate(), type }]);
-      setAmount(0);
-      setTitle('');
-      setLoading(false);
+      try {
+        setLoading(true);
+        const res = await fetch('api/expense', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ title, amount, id: generateRandomId(), date: GetDate(), type, owner: Owner }),
+        });
+
+        if (!res.ok) {
+          throw new Error('Failed to add transaction');
+        }
+
+        setAmount(0);
+        setTitle('');
+        setFetchData(prev => !prev);
+      } catch (error) {
+        console.error('Error adding transaction:', error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
-  const handleRemove = (id: string) => {
+  const handleRemove = async (id: string) => {
     setLoading(true);
-    setTransactions(prevTransactions => prevTransactions.filter((transaction) => transaction.id !== id));
-    setLoading(false);
+    try {
+      const res = await fetch(`/api/expense/`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to delete transaction');
+      }
+
+    } catch (error) {
+      console.error('Error removing transaction:', error);
+    } finally {
+      setLoading(false);
+      setFetchData(prev => !prev)
+    }
   };
 
   const calculateBalance = () => {
-    return transactions.reduce((total, transaction) => (transaction.type === 'income'? total + transaction.amount: total - transaction.amount), 0);
+    if (transactions.length === 0) {
+      return 0;
+    } else {
+      return transactions.reduce((total, transaction) => (transaction.type === 'income' ? total + transaction.amount : total - transaction.amount), 0);
+    }
   };
 
   const calculateIncome = () => {
-    return transactions.reduce((total, transaction) => (transaction.type === 'income'? total + transaction.amount: total + 0), 0);
+    if (transactions.length === 0) {
+      return 0;
+    } else {
+      return transactions.reduce((total, transaction) => (transaction.type === 'income' ? total + transaction.amount : total + 0), 0);
+    }
   };
-  
+
   const calculateExpense = () => {
-    return transactions.reduce((total, transaction) => (transaction.type === 'expense'? total + transaction.amount: total + 0), 0);
+    if (transactions.length === 0) {
+      return 0;
+    } else {
+      return transactions.reduce((total, transaction) => (transaction.type === 'expense' ? total + transaction.amount : total + 0), 0);
+    }
   };
 
   return (
     <div className='flex flex-col justify-center items-center'>
       <h2 className='text-6xl xse:text-4xl font-bold mt-3 mb-5 text-[#8300ff] italic'>Expenses</h2>
-
       {loading && (
         <div
           className="fixed top-0 z-40 left-0 w-full h-full bg-gray-900 opacity-95 flex flex-col space-y-2 items-center justify-center"
@@ -161,10 +236,10 @@ const Expenses = () => {
         <div className="my-2">
           <h3 className="font-medium text-xl">Transaction History</h3>
           <div className="h-[1px] w-full mt-2 bg-gray-400" />
-          {transactions.map((transaction, index) =>
+          {transactions.slice().reverse().map((transaction, index) =>
             <div key={index} className={`shadow-md border rounded my-2 flex flex-row justify-between items-center p-2 border-l-8 ${transaction.type === 'income' ? 'border-l-green-500' : 'border-l-[#FF0000]'}`}>
               <div>
-                <h3 className="font-medium text-lg break-all">{transaction.Title}</h3>
+                <h3 className="font-medium text-lg break-all">{transaction.title}</h3>
                 <p className="text-gray-500 text-sm break-all">{transaction.date}</p>
               </div>
               <div className="flex flex-row items-center">

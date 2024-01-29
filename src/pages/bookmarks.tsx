@@ -1,20 +1,22 @@
 import Edit from '@/components/global/Edit';
 import Remove from '@/components/global/Remove';
 import Links from '@/components/bookmark/Links';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { generateRandomId } from '@/components/utils/RandomId';
 import Load from '@/components/utils/Load';
 
-interface BookmarkProps {
-  Title: string;
+export interface BookmarkProps {
+  title: string;
   url: string;
   id: string;
+  owner: string;
 }
 
 const Bookmarks = () => {
   const [url, setUrl] = useState('');
   const [title, setTitle] = useState('');
+  const [fetchData, setFetchData] = useState(false);
   const [bookmarks, setBookmarks] = useState<BookmarkProps[]>([]);
   const [editId, setEditId] = useState('');
   const [editTitle, setEditTitle] = useState('');
@@ -24,13 +26,36 @@ const Bookmarks = () => {
   const [editUrlError, setEditURLError] = useState<string | null>(null);
   const [editTitleError, setEditTitleError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const Owner = 'aaaaa1';
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const res = await fetch(`/api/bookmark?owner=${Owner}`, {
+        method: 'GET',
+      });
+
+      const data = await res.json();
+
+      if (data.length > 0) {
+        setBookmarks(data);
+        setLoading(false);
+      }
+      else {
+        setBookmarks([]);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [fetchData]);
 
   const isValidUrl = (inputUrl: string) => {
     const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
     return urlRegex.test(inputUrl);
   };
 
-  const handleAddBookmark = () => {
+  const handleAddBookmark = async () => {
     setURLError(null);
     setTitleError(null);
 
@@ -43,11 +68,28 @@ const Bookmarks = () => {
     }
 
     if (title && isValidUrl(url)) {
-      setLoading(true);
-      setBookmarks(prevBookmarks => [...prevBookmarks, { Title: title, url, id: generateRandomId() }]);
-      setUrl('');
-      setTitle('');
-      setLoading(false);
+      try {
+        setLoading(true);
+        const res = await fetch('api/bookmark', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ title, url, id: generateRandomId(), owner: Owner }),
+        });
+
+        if (!res.ok) {
+          throw new Error('Failed to add Bookmark');
+        }
+
+        setUrl('');
+        setTitle('');
+        setFetchData(prev => !prev);
+      } catch (error) {
+        console.error('Error adding bookmark:', error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -63,7 +105,7 @@ const Bookmarks = () => {
     }
   }
 
-  const handleEditBookmark = () => {
+  const handleEditBookmark = async (id: string) => {
     setEditURLError(null);
     setEditTitleError(null);
 
@@ -76,28 +118,54 @@ const Bookmarks = () => {
     }
 
     if (editTitle && isValidUrl(editUrl)) {
-      setLoading(true);
-      setBookmarks(prevBookmarks => {
-        const updatedBookmarks = prevBookmarks.map(bookmark =>
-          bookmark.id === editId ? { ...bookmark, Title: editTitle, url: editUrl } : bookmark
-        );
+      try {
+        setLoading(true);
+        const res = await fetch('api/bookmark', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ title: editTitle, url: editUrl, id, edit: true }),
+        });
 
+        if (!res.ok) {
+          throw new Error('Failed to edit Bookmark');
+        }
+
+        setFetchData(prev => !prev);
+      } catch (error) {
+        console.error('Error editing bookmark:', error);
+      } finally {
         setEditId('');
         setEditTitle('');
         setEditUrl('');
-
         setLoading(false);
-
-        return updatedBookmarks;
-      });
+      }
     }
   }
 
-  const handleRemove = (id: string) => {
+  const handleRemove = async (id: string) => {
     setLoading(true);
-    setBookmarks(prevBookmarks => prevBookmarks.filter(bookmark => bookmark.id !== id));
-    setLoading(false);
-  }
+    try {
+      const res = await fetch(`/api/bookmark/`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to delete bookmark');
+      }
+
+    } catch (error) {
+      console.error('Error removing bookmark:', error);
+    } finally {
+      setLoading(false);
+      setFetchData(prev => !prev)
+    }
+  };
 
   return (
     <div className='flex flex-col justify-center items-center'>
@@ -151,7 +219,7 @@ const Bookmarks = () => {
       </button>
 
       <div className="my-4 mx-2">
-        {bookmarks.map((bookmark, index) => (
+        {bookmarks.slice().reverse().map((bookmark, index) => (
           <div className='rounded my-2 p-6 bg-[#f0f3ff] flex flex-row items-center justify-between space-x-3' key={index}>
             <div className='flex flex-row space-x-3 justify-center items-center'>
               <Link href={bookmark.url} target='_blank' className='hover:bg-gray-300 rounded-full p-2'>
@@ -182,19 +250,19 @@ const Bookmarks = () => {
 
                   <button
                     className="bg-teal-500 hover:bg-teal-600 my-2 w-36 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    onClick={handleEditBookmark}
+                    onClick={() => handleEditBookmark(bookmark.id)}
                   >
                     Edit Bookmark
                   </button>
                 </div>
                 :
                 <div className='flex flex-col'>
-                  <h2 className='font-medium break-all'>{bookmark.Title}</h2>
+                  <h2 className='font-medium break-all'>{bookmark.title}</h2>
                   <p className='text-gray-500 break-all'>{bookmark.url}</p>
                 </div>}
             </div>
             <div>
-              <button onClick={() => handleEdit(bookmark.Title, bookmark.url, bookmark.id)} className='hover:bg-gray-300 rounded-full p-2'>
+              <button onClick={() => handleEdit(bookmark.title, bookmark.url, bookmark.id)} className='hover:bg-gray-300 rounded-full p-2'>
                 <Edit />
               </button>
               <button onClick={() => handleRemove(bookmark.id)} className='hover:bg-gray-300 rounded-full p-2'>
