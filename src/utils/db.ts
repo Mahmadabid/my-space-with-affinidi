@@ -1,5 +1,7 @@
-import { Client } from "pg";
+import { Pool } from 'pg';
 
-const client = new Client(process.env.DATABASE_URL);
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+});
 
-export default client;
+export default pool;

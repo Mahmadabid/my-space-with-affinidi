@@ -1,12 +1,13 @@
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import Load from './utils/Load';
+import ProfileDropdown from './log/ProfileDropdown';
+import { UserContext } from '@/utils/Context';
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
-  const [User, setUser] = useState(false);
+  const [User, _] = useContext(UserContext);
 
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -45,15 +46,7 @@ const Header = () => {
           <p className="text-orange-600 text-lg font-bold">It will take a few seconds</p>
         </div>
       )}
-      {User ? (
-        <button
-          className='font-bold text-2xl'
-          onClick={() => { }}
-        >
-        </button>
-      ) : (
-        <></>
-      )}
+      {User.userId ? <ProfileDropdown setLoggingOut={setLoggingOut} email={User.user.email} />: <></>}
       <h1 className="mx-auto text-4xl xse:text-3xl font-bold">
         <Link href='/'>My Space</Link>
       </h1>

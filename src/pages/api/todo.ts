@@ -1,7 +1,6 @@
-import client from '@/utils/db';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Client } from 'pg';
 import { TodoProps } from '../todo';
+import pool from '@/utils/db';
 
 interface ReqProps extends TodoProps {
     edit?: 'edit' | 'fav';
@@ -11,10 +10,9 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
+    const client = await pool.connect();
+    
     try {
-        const client = new Client(process.env.DATABASE_URL);
-        await client.connect();
-
         await client.query(`
         CREATE TABLE IF NOT EXISTS todo_table (
         id VARCHAR(255),
@@ -95,6 +93,6 @@ export default async function handler(
         console.error('Error executing query:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     } finally {
-        await client.end();
+        client.release();
     }
 }

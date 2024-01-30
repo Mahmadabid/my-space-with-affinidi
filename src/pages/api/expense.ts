@@ -1,15 +1,14 @@
-import client from '@/utils/db';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { TransactionProps } from '../expenses';
-import { Client } from 'pg';
+import pool from '@/utils/db';
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
+    const client = await pool.connect();
+
     try {
-        const client = new Client(process.env.DATABASE_URL);
-        await client.connect();
 
         await client.query(`
         CREATE TABLE IF NOT EXISTS transaction_table (
@@ -72,6 +71,6 @@ export default async function handler(
         console.error('Error executing query:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     } finally {
-        await client.end();
+        client.release();
     }
 }
