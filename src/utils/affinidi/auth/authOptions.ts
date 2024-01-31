@@ -11,8 +11,8 @@ export const authOptions: NextAuthOptions = {
     async signIn({ account }) {
       return Boolean(
         account?.provider === provider.id &&
-          account.access_token &&
-          account.id_token
+        account.access_token &&
+        account.id_token
       );
     },
     // "account" and "profile" are only passed the first time this callback is called on a new session, after the user signs in
@@ -25,12 +25,20 @@ export const authOptions: NextAuthOptions = {
         userDID = profileItems.find(
           (item: any) => typeof item.did === "string"
         )?.did;
-        user.email = profileItems.find(
-          (item: any) => typeof item.email === "string"
-        )?.email;
-        user.country = profileItems.find(
-          (item: any) => typeof item.address === "object"
-        )?.address?.country;
+        user.email = profileItems.find((item: any) => typeof item.email === "string")?.email;
+        user.familyName = profileItems.find((item: any) => typeof item.familyName === "string")?.familyName;
+        user.givenName = profileItems.find((item: any) => typeof item.givenName === "string")?.givenName;
+        user.middleName = profileItems.find((item: any) => typeof item.middleName === "string")?.middleName;
+        user.picture = profileItems.find((item: any) => typeof item.picture === "string")?.picture;
+        user.country = profileItems.find((item: any) => typeof item.country === "string")?.country;
+        user.nickname = profileItems.find((item: any) => typeof item.nickname === "string")?.nickname;
+        user.phoneNumber = profileItems.find((item: any) => typeof item.phoneNumber === "string")?.phoneNumber;
+        user.gender = profileItems.find((item: any) => typeof item.gender === "string")?.gender;
+        user.birthdate = profileItems.find((item: any) => typeof item.birthdate === "string")?.birthdate;
+        user.livenessCheckPassed = profileItems.find((item: any) => typeof item.livenessCheckPassed === "string")?.livenessCheckPassed;
+        user.postalCode = profileItems.find((item: any) => typeof item.postalCode === "string")?.postalCode;
+        user.locality = profileItems.find((item: any) => typeof item.locality === "string")?.locality;
+        user.formatted = profileItems.find((item: any) => typeof item.formatted === "string")?.formatted;
         token = {
           ...token,
           user,

@@ -1,10 +1,11 @@
 import Edit from '@/components/global/Edit';
 import Remove from '@/components/global/Remove';
 import Links from '@/components/bookmark/Links';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { generateRandomId } from '@/components/utils/RandomId';
 import Load from '@/components/utils/Load';
+import { UserContext } from '@/utils/Context';
 
 export interface BookmarkProps {
   title: string;
@@ -26,12 +27,12 @@ const Bookmarks = () => {
   const [editUrlError, setEditURLError] = useState<string | null>(null);
   const [editTitleError, setEditTitleError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const Owner = 'aaaaa1';
+  const [User, _] = useContext(UserContext);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const res = await fetch(`/api/bookmark?owner=${Owner}`, {
+      const res = await fetch(`/api/bookmark?owner=${User.userId}`, {
         method: 'GET',
       });
 
@@ -75,7 +76,7 @@ const Bookmarks = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ title, url, id: generateRandomId(), owner: Owner }),
+          body: JSON.stringify({ title, url, id: generateRandomId(User.userId), owner: User.userId }),
         });
 
         if (!res.ok) {

@@ -14,7 +14,7 @@ export async function handler(
   req: NextApiRequest,
   res: NextApiResponse<HandlerResponse>
 ) {
-  const { userId, user,  } = await auth(req, res);
+  const { userId, user } = await auth(req, res);
 
   res.status(200).json({ userId, user });
 }

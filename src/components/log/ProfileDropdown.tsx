@@ -5,9 +5,10 @@ import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 're
 interface ProfileDropdownProps {
     setLoggingOut: Dispatch<SetStateAction<boolean>>;
     email?: string;
+    picture?: string;
 }
 
-const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ setLoggingOut, email }) => {
+const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ setLoggingOut, email, picture }) => {
     const [showDropdown, setShowDropdown] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -40,18 +41,19 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ setLoggingOut, email 
                 onClick={handleDropdownToggle}
                 className="relative w-10 h-10 overflow-hidden bg-sky-100 rounded-full cursor-pointer"
             >
-                <svg
-                    className="absolute w-12 h-12 text-[#00aaff] -left-1 transition-transform transform hover:scale-110"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                        fillRule="evenodd"
-                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                        clipRule="evenodd"
-                    ></path>
-                </svg>
+                {picture ? <img src={picture} /> :
+                    <svg
+                        className="absolute w-12 h-12 text-[#00aaff] -left-1 transition-transform transform hover:scale-110"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            fillRule="evenodd"
+                            d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                            clipRule="evenodd"
+                        ></path>
+                    </svg>}
             </div>
 
             {showDropdown && (

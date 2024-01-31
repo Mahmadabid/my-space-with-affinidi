@@ -9,9 +9,21 @@ export interface UserDataProps {
 export const UserDataValues = {
     userId: '',
     user: {
-        email: '',
-        country: ''
+        email: "",
+        familyName: "",
+        givenName: "",
+        middleName: "",
+        picture: "",
+        country: "",
+        nickname: "",
+        phoneNumber: "",
+        gender: "",
+        birthdate: "",
+        livenessCheckPassed: "",
+        postalCode: "",
+        locality: "",
+        formatted: "",
     }
 }
 
-export const UserContext = createContext<[UserDataProps, Dispatch<SetStateAction<UserDataProps>>]>(([UserDataValues, () => {}]));
+export const UserContext = createContext<[UserDataProps, Dispatch<SetStateAction<UserDataProps>>]>(([UserDataValues, () => { }]));

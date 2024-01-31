@@ -2,7 +2,8 @@ import GetDate from "@/components/global/Date";
 import Remove from "@/components/global/Remove";
 import Load from "@/components/utils/Load"
 import { generateRandomId } from "@/components/utils/RandomId";
-import { useEffect, useState } from "react";
+import { UserContext } from "@/utils/Context";
+import { useContext, useEffect, useState } from "react";
 
 export interface TransactionProps {
   title: string;
@@ -23,12 +24,12 @@ const Expenses = () => {
   const [titleError, setTitleError] = useState<string | null>(null);
   const [type, setType] = useState<'income' | 'expense'>('income');
   const [transactions, setTransactions] = useState<TransactionProps[]>([]);
-  const Owner = 'aaaaa1';
+  const [User, _] = useContext(UserContext);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const res = await fetch(`/api/expense?owner=${Owner}`, {
+      const res = await fetch(`/api/expense?owner=${User.userId}`, {
         method: 'GET',
       });
 
@@ -72,7 +73,7 @@ const Expenses = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ title, amount, id: generateRandomId(), date: GetDate(), type, owner: Owner }),
+          body: JSON.stringify({ title, amount, id: generateRandomId(User.userId), date: GetDate(), type, owner: User.userId }),
         });
 
         if (!res.ok) {

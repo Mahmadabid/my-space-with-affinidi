@@ -46,7 +46,7 @@ const Header = () => {
           <p className="text-orange-600 text-lg font-bold">It will take a few seconds</p>
         </div>
       )}
-      {User.userId ? <ProfileDropdown setLoggingOut={setLoggingOut} email={User.user.email} />: <></>}
+      {User.userId ? <ProfileDropdown setLoggingOut={setLoggingOut} email={User.user.email} picture={User.user.picture} />: <></>}
       <h1 className="mx-auto text-4xl xse:text-3xl font-bold">
         <Link href='/'>My Space</Link>
       </h1>

@@ -13,6 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     const fetchUser = async () => {
       const userInfo = await useAuthentication();
+      console.log(userInfo, 'aaaaaaaa')
       setUserData(prev => ({
         ...prev,
         userId: userInfo.userId,
@@ -27,7 +28,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <UserContext.Provider value={[userData, setUserData]}>
         <Layout>
-          {userData ?
+          {userData.userId ?
             <Component {...pageProps} />
             : <Login />}
         </Layout>
