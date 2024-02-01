@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { useState, useEffect, useRef, useContext } from 'react';
-import Load from './utils/Load';
-import ProfileDropdown from './log/ProfileDropdown';
+import Load from '../utils/Load';
 import { UserContext } from '@/utils/Context';
+import ProfileDropdown from './ProfileDropdown';
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -65,6 +65,9 @@ const Header = () => {
         >
           <Link onClick={closeMenu} href="/">
             <h1 className="block hover:bg-blue-500 font-medium hover:rounded-md hover:text-white px-4 py-2 text-gray-800">Home</h1>
+          </Link>
+          <Link onClick={closeMenu} href="/profile">
+            <h1 className="block hover:bg-blue-500 font-medium hover:rounded-md hover:text-white px-4 py-2 text-gray-800">Profile</h1>
           </Link>
           <Link onClick={closeMenu} href="/todo">
             <h1 className="block hover:bg-blue-500 font-medium hover:rounded-md hover:text-white px-4 py-2 text-gray-800">Todo</h1>

@@ -15,8 +15,8 @@ export type UserInfo = {
   phoneNumber?: string;
   gender?: string;
   birthdate?: string;
-  livenessCheckPassed?: string;
   postalCode?: string;
-  locality?: string;
-  formatted?: string;
+  city?: string;
+  address?: string;
+  verified?: boolean;
 };

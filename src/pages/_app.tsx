@@ -1,5 +1,5 @@
 import Layout from "@/components/Layout";
-import Login from "@/components/log/Login";
+import Login from "@/components/Login";
 import "@/styles/globals.css";
 import { UserContext, UserDataProps, UserDataValues } from "@/utils/Context";
 import { useAuthentication } from "@/utils/affinidi/hooks/use-authentication";
@@ -9,16 +9,19 @@ import { useEffect, useState } from "react";
 export default function App({ Component, pageProps }: AppProps) {
 
   const [userData, setUserData] = useState<UserDataProps>(UserDataValues);
+  const [userLoading, setUserLoading] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
+      setUserLoading(true);
       const userInfo = await useAuthentication();
-      console.log(userInfo, 'aaaaaaaa')
+
       setUserData(prev => ({
         ...prev,
         userId: userInfo.userId,
         user: userInfo.user
       }));
+      setUserLoading(false);
     }
 
     fetchUser();
@@ -30,7 +33,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <Layout>
           {userData.userId ?
             <Component {...pageProps} />
-            : <Login />}
+            : <Login userLoading={userLoading} />}
         </Layout>
       </UserContext.Provider>
     </>

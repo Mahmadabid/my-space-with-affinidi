@@ -23,22 +23,22 @@ export const authOptions: NextAuthOptions = {
         let userDID: string;
         let user: UserInfo = {};
         userDID = profileItems.find(
-          (item: any) => typeof item.did === "string"
+          (item: { did: string; }) => typeof item.did === "string"
         )?.did;
-        user.email = profileItems.find((item: any) => typeof item.email === "string")?.email;
-        user.familyName = profileItems.find((item: any) => typeof item.familyName === "string")?.familyName;
-        user.givenName = profileItems.find((item: any) => typeof item.givenName === "string")?.givenName;
-        user.middleName = profileItems.find((item: any) => typeof item.middleName === "string")?.middleName;
-        user.picture = profileItems.find((item: any) => typeof item.picture === "string")?.picture;
-        user.country = profileItems.find((item: any) => typeof item.country === "string")?.country;
-        user.nickname = profileItems.find((item: any) => typeof item.nickname === "string")?.nickname;
-        user.phoneNumber = profileItems.find((item: any) => typeof item.phoneNumber === "string")?.phoneNumber;
-        user.gender = profileItems.find((item: any) => typeof item.gender === "string")?.gender;
-        user.birthdate = profileItems.find((item: any) => typeof item.birthdate === "string")?.birthdate;
-        user.livenessCheckPassed = profileItems.find((item: any) => typeof item.livenessCheckPassed === "string")?.livenessCheckPassed;
-        user.postalCode = profileItems.find((item: any) => typeof item.postalCode === "string")?.postalCode;
-        user.locality = profileItems.find((item: any) => typeof item.locality === "string")?.locality;
-        user.formatted = profileItems.find((item: any) => typeof item.formatted === "string")?.formatted;
+        user.email = profileItems.find((item: { email: string; }) => typeof item.email === "string")?.email;
+        user.familyName = profileItems.find((item: { familyName: string; }) => typeof item.familyName === "string")?.familyName;
+        user.givenName = profileItems.find((item: { givenName: string; }) => typeof item.givenName === "string")?.givenName;
+        user.middleName = profileItems.find((item: { middleName: string; }) => typeof item.middleName === "string")?.middleName;
+        user.picture = profileItems.find((item: { picture: string; }) => typeof item.picture === "string")?.picture;
+        user.country = profileItems.find((item: { country: string; }) => typeof item.country === "string")?.country;
+        user.nickname = profileItems.find((item: { nickname: string; }) => typeof item.nickname === "string")?.nickname;
+        user.phoneNumber = profileItems.find((item: { phoneNumber: string; }) => typeof item.phoneNumber === "string")?.phoneNumber;
+        user.gender = profileItems.find((item: { gender: string; }) => typeof item.gender === "string")?.gender;
+        user.birthdate = profileItems.find((item: { birthdate: string; }) => typeof item.birthdate === "string")?.birthdate;
+        user.postalCode = profileItems.find((item: { postalCode: string; }) => typeof item.postalCode === "string")?.postalCode;
+        user.city = profileItems.find((item: { locality: string; }) => typeof item.locality === "string")?.locality;
+        user.address = profileItems.find((item: { formatted: string; }) => typeof item.formatted === "string")?.formatted;
+        user.verified = profileItems.find((item: { livenessCheckPassed: boolean; }) => typeof item.livenessCheckPassed === "boolean")?.livenessCheckPassed;
         token = {
           ...token,
           user,

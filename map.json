@@ -1,0 +1,82 @@
+[
+    {
+      "sourceField": "$.credentialSubject.email",
+      "idTokenClaim": "email",
+      "inputDescriptorId": "email_vc"
+    },
+    {
+      "sourceField": "$.issuer",
+      "idTokenClaim": "issuer",
+      "inputDescriptorId": "email_vc"
+    },
+    {
+      "sourceField": "$.credentialSubject.phoneNumber",
+      "idTokenClaim": "phoneNumber",
+      "inputDescriptorId": "mobile_vc"
+    },
+    {
+      "sourceField": "$.credentialSubject.givenName",
+      "idTokenClaim": "givenName",
+      "inputDescriptorId": "givenname_vc"
+    },
+    {
+      "sourceField": "$.credentialSubject.familyName",
+      "idTokenClaim": "familyName",
+      "inputDescriptorId": "familyName"
+    },
+    {
+      "sourceField": "$.credentialSubject.middleName",
+      "idTokenClaim": "middleName",
+      "inputDescriptorId": "middleName"
+    },
+    {
+      "sourceField": "$.credentialSubject.nickname",
+      "idTokenClaim": "nickname",
+      "inputDescriptorId": "nickname"
+    },
+    {
+      "sourceField": "$.credentialSubject.birthdate",
+      "idTokenClaim": "birthdate",
+      "inputDescriptorId": "birthdate"
+    },
+    {
+      "sourceField": "$.credentialSubject.gender",
+      "idTokenClaim": "gender",
+      "inputDescriptorId": "gender"
+    },
+    {
+      "sourceField": "$.credentialSubject.picture",
+      "idTokenClaim": "picture",
+      "inputDescriptorId": "picture"
+    },
+    {
+      "sourceField": "$.credentialSubject.formatted",
+      "idTokenClaim": "formatted",
+      "inputDescriptorId": "address"
+    },
+    {
+      "sourceField": "$.credentialSubject.locality",
+      "idTokenClaim": "locality",
+      "inputDescriptorId": "address"
+    },
+    {
+      "sourceField": "$.credentialSubject.postalCode",
+      "idTokenClaim": "postalCode",
+      "inputDescriptorId": "address"
+    },
+    {
+      "sourceField": "$.credentialSubject.country",
+      "idTokenClaim": "country",
+      "inputDescriptorId": "address"
+    },
+    {
+      "sourceField": "$.credentialSubject.livenessCheckPassed",
+      "idTokenClaim": "livenessCheckPassed",
+      "inputDescriptorId": "livenessCheckPassed"
+    },
+    {
+      "sourceField": "$.issuer",
+      "idTokenClaim": "issuer",
+      "inputDescriptorId": "livenessCheckPassed"
+    }
+  ]

@@ -19,10 +19,10 @@ export const UserDataValues = {
         phoneNumber: "",
         gender: "",
         birthdate: "",
-        livenessCheckPassed: "",
         postalCode: "",
-        locality: "",
-        formatted: "",
+        city: "",
+        address: "",
+        verified: false,
     }
 }
 
