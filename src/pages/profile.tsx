@@ -12,9 +12,22 @@ const Profile = () => {
     return (
         <div className="container mx-auto mt-8 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             <div className="col-span-full bg-gray-100 p-6 rounded-md shadow-md flex flex-col items-center justify-center">
-                <img src={User.user.picture} alt="Profile Picture" className="w-24 h-24 rounded-full" />
+                {!User.user.picture ? <img src={User.user.picture} alt="Profile Picture" className="w-32 h-32 rounded-full" /> : <div className='relative rounded-full bg-sky-100 w-32 h-32'>
+                    <svg
+                        className="absolute left-0 -top-[6px] w-32 h-32 text-[#00aaff]"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            fillRule="evenodd"
+                            d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                            clipRule="evenodd"
+                        ></path>
+                    </svg>
+                </div>}
                 <div className='flex flex-row items-center justify-center mt-4'>
-                    <p className='text-3xl font-bold text-[#000d47]'>{User.user.givenName} {User.user.middleName} {User.user.familyName}</p>
+                    <p className='text-3xl font-bold text-[#000d47]'>{User.user.givenName} {User.user.middleName} {User.user.familyName} {User.user.givenName && User.user.familyName && User.user.middleName? null: 'User'}</p>
                     <span
                         className="ml-2 inline-block relative group"
                         onMouseEnter={() => setIsVisible(true)}
