@@ -69,6 +69,12 @@ const Header = () => {
           <Link onClick={closeMenu} href="/profile">
             <h1 className="block hover:bg-blue-500 font-medium hover:rounded-md hover:text-white px-4 py-2 text-gray-800">Profile</h1>
           </Link>
+          <Link onClick={closeMenu} href="/bank">
+            <h1 className="block hover:bg-blue-500 font-medium hover:rounded-md hover:text-white px-4 py-2 text-gray-800">Bank</h1>
+          </Link>
+          <Link onClick={closeMenu} href="/card">
+            <h1 className="block hover:bg-blue-500 font-medium hover:rounded-md hover:text-white px-4 py-2 text-gray-800">Card Maker</h1>
+          </Link>
           <Link onClick={closeMenu} href="/todo">
             <h1 className="block hover:bg-blue-500 font-medium hover:rounded-md hover:text-white px-4 py-2 text-gray-800">Todo</h1>
           </Link>
