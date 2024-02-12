@@ -1,8 +1,8 @@
 import { UserContext } from '@/utils/Context';
 import { faDownload, faEnvelope, faGlobe, faMapMarkerAlt, faPhone, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import html2canvas from 'html2canvas';
-import { useContext, useRef, useState } from 'react';
+import { MutableRefObject, useContext, useRef, useState } from 'react';
+import domtoimage from 'dom-to-image';
 
 const Card = () => {
 
@@ -17,35 +17,35 @@ const Card = () => {
     const [backBgColor, setBackBgColor] = useState('#0f172a');
     const [backHdColor, setBackHdColor] = useState('#FFFFFF');
 
-    const handleFrontDownload = () => {
-        const scale = 2;
+    const handleDownload = (ref: MutableRefObject<null>, fileName: string) => {
+        const node = ref.current;
 
-        if (frontRef.current) {
-            html2canvas(frontRef.current, { scale }).then((canvas) => {
-                const link = document.createElement('a');
-                link.href = canvas.toDataURL(`${User.user.givenName ? User.user.givenName : 'profileFront'}/png`);
-                link.download = `${User.user.givenName ? User.user.givenName + 'Front' : 'profileFront'}.png`;
-                link.click();
-            });
+        if (node) {
+            domtoimage.toPng(node)
+                .then(function (dataUrl: string) {
+                    const link = document.createElement('a');
+                    link.href = dataUrl;
+                    link.download = fileName;
+                    link.click();
+                })
+                .catch(function (error: any) {
+                    console.error('Error generating image:', error);
+                });
         }
+    };
+
+    const handleFrontDownload = () => {
+        handleDownload(frontRef, `${User.user.givenName ? User.user.givenName + 'Front' : 'profileFront'}.png`);
     };
 
     const handleBackDownload = () => {
-        const scale = 2;
-
-        if (backRef.current) {
-            html2canvas(backRef.current, { scale }).then((canvas) => {
-                const link = document.createElement('a');
-                link.href = canvas.toDataURL(`${User.user.givenName ? User.user.givenName : 'profileBack'}/png`);
-                link.download = `${User.user.givenName ? User.user.givenName + 'Back' : 'profileBack'}.png`;
-                link.click();
-            });
-        }
+        handleDownload(backRef, `${User.user.givenName ? User.user.givenName + 'Back' : 'profileBack'}.png`);
     };
 
     return (
-        <div className='flex flex-col justify-center items-center mb-2 mt-4'>
-            <div ref={frontRef} className="w-[300px] h-[170px] mt-2 overflow-hidden relative" style={{ backgroundColor: bgColor }}>
+        <div className='flex flex-col justify-center items-center mb-2 mt-4 pt-4'>
+            <h2 className='text-6xl xse:text-4xl font-bold mb-8 text-[#52c09f] italic'>Card Maker</h2>
+            <div ref={frontRef} className="w-[300px] h-[170px] overflow-hidden relative" style={{ backgroundColor: bgColor }}>
                 <div className="absolute w-16 h-16 right-2 bottom-3 overflow-hidden flex justify-center items-center bg-sky-100 rounded-full cursor-pointer">
                     {User.user.picture ? <img src={User.user.picture} /> :
                         <svg
@@ -91,14 +91,14 @@ const Card = () => {
                 <input type="color" value={hdColor} onChange={(e) => setHdColor(e.target.value)} className="mt-2 mx-1" />
                 <input type="color" value={pColor} onChange={(e) => setPColor(e.target.value)} className="mt-2 mx-1" />
             </div>
-            <div className='flex flex-col justify-center items-center mt-2'>
+            <div className='flex flex-col justify-center items-center mt-2 mb-4'>
                 <p className="text-lg font-medium">Download Your Card</p>
                 <button onClick={handleFrontDownload} className="my-2 flex text-white bg-blue-500 hover:bg-blue-700 p-2 font-medium rounded-md items-center">
                     <FontAwesomeIcon icon={faDownload} className="mr-2" />
                     Download Front
                 </button>
             </div>
-            <div ref={backRef} className="w-[300px] h-[170px] mt-2 overflow-hidden flex justify-center items-center relative" style={{ backgroundColor: backBgColor }}>
+            <div ref={backRef} className="w-[300px] h-[170px] overflow-hidden flex justify-center items-center relative" style={{ backgroundColor: backBgColor }}>
                 <div className="px-2 pt-2 z-10 flex flex-row justify-center items-center">
                     <FontAwesomeIcon icon={faMapMarkerAlt} className="text-xl mr-2" style={{ color: backHdColor }} />
                     <h2 className="text-xl font-bold break-all" style={{ color: backHdColor }}>{User.user.address} {User.user.address ? null : 'User Lives here'}</h2>

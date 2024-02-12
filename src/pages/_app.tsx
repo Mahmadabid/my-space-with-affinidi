@@ -2,6 +2,7 @@ import Layout from "@/components/Layout";
 import Login from "@/components/Login";
 import "@/styles/globals.css";
 import { UserContext, UserDataProps, UserDataValues } from "@/utils/Context";
+import { CountryProvider } from "@/utils/CountryContext";
 import { useAuthentication } from "@/utils/affinidi/hooks/use-authentication";
 import type { AppProps } from "next/app";
 import { useEffect, useState } from "react";
@@ -30,11 +31,13 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <UserContext.Provider value={[userData, setUserData]}>
-        <Layout>
-          {userData.userId ?
-            <Component {...pageProps} />
-            : <Login userLoading={userLoading} />}
-        </Layout>
+        <CountryProvider>
+          <Layout>
+            {userData.userId ?
+              <Component {...pageProps} />
+              : <Login userLoading={userLoading} />}
+          </Layout>
+        </CountryProvider>
       </UserContext.Provider>
     </>
   );
