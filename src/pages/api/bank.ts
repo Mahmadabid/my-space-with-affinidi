@@ -1,9 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { BankProps } from '../bank';
 import pool from '@/utils/db';
-
-interface BankProps {
-    owner: string;
-}
 
 export default async function handler(
     req: NextApiRequest,
@@ -14,7 +11,11 @@ export default async function handler(
     try {
         await client.query(`
         CREATE TABLE IF NOT EXISTS bank_table (
-        owner VARCHAR(255)
+        id VARCHAR(255),
+        receiver VARCHAR(255),
+        date VARCHAR(155),
+        owner VARCHAR(255),
+        amount NUMERIC
         )
     `);
 
@@ -27,7 +28,7 @@ export default async function handler(
             }
 
             const result = await client.query(
-                'SELECT * FROM bank_table WHERE owner = $1',
+                'SELECT * FROM bank_table WHERE owner = $1 OR receiver = $1;',
                 [owner]
             );
 
@@ -38,17 +39,17 @@ export default async function handler(
 
             res.status(200).json(result.rows);
         } else if (req.method === 'POST') {
-            const { owner } = req.body as BankProps;
+            const { amount, receiver, id, owner, date } = req.body as BankProps;
 
             await client.query(
                 `
-                  INSERT INTO bank_table (owner)
-                  VALUES ($1)
+                  INSERT INTO bank_table (id, amount, receiver, date, owner)
+                  VALUES ($1, $2, $3, $4, $5)
                   `,
-                [owner]
+                [id, amount, receiver, date, owner]
             );
 
-            res.status(200).json({ message: 'Bank updated successfully' });
+            res.status(200).json({ message: 'Transaction updated successfully' });
         } else {
             res.status(405).json({ error: 'Method Not Allowed' });
         }

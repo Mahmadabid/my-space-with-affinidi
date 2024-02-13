@@ -3,6 +3,7 @@ import Remove from "@/components/global/Remove";
 import Load from "@/components/utils/Load"
 import { generateRandomId } from "@/components/utils/RandomId";
 import { UserContext } from "@/utils/Context";
+import { CountryContext } from "@/utils/CountryContext";
 import { useContext, useEffect, useState } from "react";
 
 export interface TransactionProps {
@@ -16,6 +17,7 @@ export interface TransactionProps {
 
 const Expenses = () => {
 
+  const [country] = useContext(CountryContext);
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState(0);
   const [fetchData, setFetchData] = useState(false);
@@ -151,17 +153,17 @@ const Expenses = () => {
 
       <div className="w-[350px] xse:w-[320px] xb:w-[270px] mt-3 flex flex-col px-2">
         <h3 className='font-medium text-xl'>Your Balance</h3>
-        <p className={`text-3xl font-medium  break-all ${calculateBalance() > 0 ? 'text-[#00ff5e]' : calculateBalance() < 0 ? 'text-[#FF0000]' : 'text-slate-600'}`}>${calculateBalance()}</p>
+        <p className={`text-3xl font-medium  break-all ${calculateBalance() > 0 ? 'text-[#00ff5e]' : calculateBalance() < 0 ? 'text-[#FF0000]' : 'text-slate-600'}`}>{country.currencySymbol} {calculateBalance()}</p>
 
         <div className="border rounded p-5 my-3 flex justify-center space-x-10 items-center flex-row shadow-md">
           <div className="flex flex-col">
             <h3 className="font-medium text-xl">Income</h3>
-            <p className="text-xl text-[#00ff5e] font-medium break-all">${calculateIncome()}</p>
+            <p className="text-xl text-[#00ff5e] font-medium break-all">{country.currencySymbol} {calculateIncome()}</p>
           </div>
           <div className="h-12 w-[1px] bg-gray-300" />
           <div className="flex flex-col">
             <h3 className="font-medium text-xl">Expense</h3>
-            <p className="text-xl text-[#FF0000] font-medium  break-all">${calculateExpense()}</p>
+            <p className="text-xl text-[#FF0000] font-medium  break-all">{country.currencySymbol} {calculateExpense()}</p>
           </div>
         </div>
 
@@ -244,7 +246,7 @@ const Expenses = () => {
                 <p className="text-gray-500 text-sm break-all">{transaction.date}</p>
               </div>
               <div className="flex flex-row items-center">
-                <h4 className={`break-all mr-2 font-medium ${transaction.type === 'income' ? 'text-[#00ff5e]' : 'text-[#FF0000]'}`}>${transaction.amount}</h4>
+                <h4 className={`break-all mr-2 font-medium ${transaction.type === 'income' ? 'text-[#00ff5e]' : 'text-[#FF0000]'}`}>{country.currencySymbol} {transaction.amount}</h4>
                 <button onClick={() => handleRemove(transaction.id)} className='hover:bg-gray-300 rounded-full p-2'>
                   <Remove />
                 </button>

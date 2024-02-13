@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext } from "react";
 
 interface FormProps {
-    handleCreateAccount: () => void;
+    handleCreateAccount: (bank: string) => void;
 }
 
 const Form: React.FC<FormProps> = ({ handleCreateAccount }) => {
@@ -42,7 +42,7 @@ const Form: React.FC<FormProps> = ({ handleCreateAccount }) => {
             </label>
             <div
                 id="firstName"
-                className="w-full py-2 px-3 mb-4 border rounded bg-slate-200"
+                className="w-full py-2 px-3 mb-4 border rounded bg-slate-100"
             >{User.user.givenName}</div>
             {User.user.middleName && <><label htmlFor="middleName" className="block mb-2 font-medium">
                 <FontAwesomeIcon icon={faUser} className="mr-1" />
@@ -50,7 +50,7 @@ const Form: React.FC<FormProps> = ({ handleCreateAccount }) => {
             </label>
                 <div
                     id="middleName"
-                    className="w-full py-2 px-3 mb-4 border rounded bg-slate-200"
+                    className="w-full py-2 px-3 mb-4 border rounded bg-slate-100"
                 >{User.user.middleName}</div></>}
             <label htmlFor="lastName" className="block mb-2 font-medium">
                 <FontAwesomeIcon icon={faUser} className="mr-1" />
@@ -58,7 +58,7 @@ const Form: React.FC<FormProps> = ({ handleCreateAccount }) => {
             </label>
             <div
                 id="lastName"
-                className="w-full py-2 px-3 mb-4 border rounded bg-slate-200"
+                className="w-full py-2 px-3 mb-4 border rounded bg-slate-100"
             >{User.user.familyName}</div>
             <label htmlFor="email" className="block mb-2 font-medium">
                 <FontAwesomeIcon icon={faEnvelope} className="mr-1" />
@@ -66,7 +66,7 @@ const Form: React.FC<FormProps> = ({ handleCreateAccount }) => {
             </label>
             <div
                 id="email"
-                className="w-full py-2 px-3 mb-4 border rounded bg-slate-200"
+                className="w-full py-2 px-3 mb-4 border rounded bg-slate-100"
             >{User.user.email}</div>
             <label htmlFor="phone" className="block mb-2 font-medium">
                 <FontAwesomeIcon icon={faPhone} className="mr-1" />
@@ -74,7 +74,7 @@ const Form: React.FC<FormProps> = ({ handleCreateAccount }) => {
             </label>
             <div
                 id="phone"
-                className="w-full py-2 px-3 mb-4 border rounded bg-slate-200"
+                className="w-full py-2 px-3 mb-4 border rounded bg-slate-100"
             >{User.user.phoneNumber}</div>
             <label htmlFor="gender" className="block mb-2 font-medium">
                 <FontAwesomeIcon icon={faVenusMars} className="mr-1" />
@@ -82,7 +82,7 @@ const Form: React.FC<FormProps> = ({ handleCreateAccount }) => {
             </label>
             <div
                 id="gender"
-                className="w-full py-2 px-3 mb-4 border rounded bg-slate-200"
+                className="w-full py-2 px-3 mb-4 border rounded bg-slate-100"
             >{User.user.gender}</div>
             <label htmlFor="birthdate" className="block mb-2 font-medium">
                 <FontAwesomeIcon icon={faCalendar} className="mr-1" />
@@ -90,7 +90,7 @@ const Form: React.FC<FormProps> = ({ handleCreateAccount }) => {
             </label>
             <div
                 id="birthdate"
-                className="w-full py-2 px-3 mb-4 border rounded bg-slate-200"
+                className="w-full py-2 px-3 mb-4 border rounded bg-slate-100"
             >{User.user.birthdate}</div>
             <label htmlFor="address" className="block mb-2 font-medium">
                 <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-1" />
@@ -98,7 +98,7 @@ const Form: React.FC<FormProps> = ({ handleCreateAccount }) => {
             </label>
             <div
                 id="address"
-                className="w-full py-2 px-3 mb-4 border rounded bg-slate-200"
+                className="w-full py-2 px-3 mb-4 border rounded bg-slate-100"
             >{User.user.address}</div>
             <label htmlFor="postalCode" className="block mb-2 font-medium">
                 <FontAwesomeIcon icon={faMapMarkedAlt} className="mr-1" />
@@ -106,7 +106,7 @@ const Form: React.FC<FormProps> = ({ handleCreateAccount }) => {
             </label>
             <div
                 id="postalCode"
-                className="w-full py-2 px-3 mb-4 border rounded bg-slate-200"
+                className="w-full py-2 px-3 mb-4 border rounded bg-slate-100"
             >{User.user.postalCode}</div>
             <label htmlFor="city" className="block mb-2 font-medium">
                 <FontAwesomeIcon icon={faCity} className="mr-1" />
@@ -114,7 +114,7 @@ const Form: React.FC<FormProps> = ({ handleCreateAccount }) => {
             </label>
             <div
                 id="city"
-                className="w-full py-2 px-3 mb-4 border rounded bg-slate-200"
+                className="w-full py-2 px-3 mb-4 border rounded bg-slate-100"
             >{User.user.city}</div>
             <label htmlFor="country" className="block mb-2 font-medium">
                 <FontAwesomeIcon icon={faGlobe} className="mr-1" />
@@ -122,13 +122,13 @@ const Form: React.FC<FormProps> = ({ handleCreateAccount }) => {
             </label>
             <div
                 id="country"
-                className="w-full py-2 px-3 mb-2 border rounded bg-slate-200"
+                className="w-full py-2 px-3 mb-2 border rounded bg-slate-100"
             >{User.user.country}</div>
 
             <div className="flex justify-center my-4 items-center">
                 <button
                     className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    onClick={handleCreateAccount}
+                    onClick={() => handleCreateAccount('Pixel Bank')}
                 >
                     Create Account
                 </button>

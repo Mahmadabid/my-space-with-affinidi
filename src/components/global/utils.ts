@@ -12,3 +12,13 @@ export const calculateAge = (birthdate: string) => {
 
     return ageDifference;
 };
+
+export const convertedPrice = (price: number, currencyRate: number) => {
+    const converted = price * currencyRate;
+    return Number(converted.toFixed(2));
+};
+
+export const reConvertedPrice = (price: number, currencyRate: number) => {
+    const converted = price / currencyRate;
+    return converted;
+};

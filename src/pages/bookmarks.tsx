@@ -174,7 +174,7 @@ const Bookmarks = () => {
 
       {loading && (
         <div
-          className="fixed top-0 z-40 left-0 w-full h-full bg-gray-900 opacity-95 flex flex-col space-y-2 items-center justify-center"
+          className="fixed top-0 z-40 left-0 w-full h-full bg-gray-700 opacity-70 flex flex-col space-y-2 items-center justify-center"
         >
           <Load className='w-9 h-9 fill-white' />
         </div>
