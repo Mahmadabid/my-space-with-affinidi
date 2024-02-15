@@ -82,6 +82,7 @@ const Bank = () => {
     };
 
     const handleSend = async (bank?: string) => {
+        setFetchData(prev => !prev);
         const balance = calculateBalance();
 
         setReceiverError(null);
