@@ -19,6 +19,7 @@ const config: Config = {
     screens: {
       'xse': {'max': '360px'},
       'xb': {'max': '325px'},
+      '-xb': {'min': '325px'},
       'prf': {'max': '550px'},
       ...defaultTheme.screens,
     }

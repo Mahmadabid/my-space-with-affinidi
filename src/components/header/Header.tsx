@@ -46,7 +46,7 @@ const Header = () => {
           <p className="text-orange-600 text-lg font-bold">It will take a few seconds</p>
         </div>
       )}
-      {User.userId ? <ProfileDropdown setLoggingOut={setLoggingOut} email={User.user.email} picture={User.user.picture} />: <></>}
+      {User.userId ? <ProfileDropdown setLoggingOut={setLoggingOut} email={User.user.email} picture={User.user.picture} /> : <></>}
       <h1 className="mx-auto text-4xl xse:text-3xl font-bold">
         <Link href='/'>My Space</Link>
       </h1>
@@ -66,9 +66,6 @@ const Header = () => {
           <Link onClick={closeMenu} href="/">
             <h1 className="block hover:bg-blue-500 font-medium hover:rounded-md hover:text-white px-4 py-2 text-gray-800">Home</h1>
           </Link>
-          <Link onClick={closeMenu} href="/profile">
-            <h1 className="block hover:bg-blue-500 font-medium hover:rounded-md hover:text-white px-4 py-2 text-gray-800">Profile</h1>
-          </Link>
           <Link onClick={closeMenu} href="/bank">
             <h1 className="block hover:bg-blue-500 font-medium hover:rounded-md hover:text-white px-4 py-2 text-gray-800">Bank</h1>
           </Link>
@@ -83,6 +80,9 @@ const Header = () => {
           </Link>
           <Link onClick={closeMenu} href="/expenses">
             <h1 className="block hover:bg-blue-500 font-medium hover:rounded-md hover:text-white px-4 py-2 text-gray-800">Expenses</h1>
+          </Link>
+          <Link onClick={closeMenu} href="/profile">
+            <h1 className="block hover:bg-blue-500 font-medium hover:rounded-md hover:text-white px-4 py-2 text-gray-800">Profile</h1>
           </Link>
         </div>
       </div>

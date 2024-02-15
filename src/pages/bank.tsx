@@ -18,6 +18,11 @@ export interface BankProps {
     owner: string;
 }
 
+enum View {
+    send = 'send',
+    transaction = 'transaction'
+}
+
 const Bank = () => {
 
     const [User, _] = useContext(UserContext);
@@ -32,6 +37,7 @@ const Bank = () => {
     const [create, setCreate] = useState(false);
     const [copied, setCopied] = useState(false);
     const [missingFields, setMissingFields] = useState<string[]>([]);
+    const [view, setView] = useState<View>(View.transaction)
 
     useEffect(() => {
         if (amount > 0) {
@@ -186,46 +192,52 @@ const Bank = () => {
                             ><p className="break-all"><span className="mr-1 font-medium text-[#03c9c2] text-lg">{country.currencySymbol}</span>{calculateBalance()}</p>
                             </div>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 my-3 md:space-x-8">
-                            <div className="col-span-1 mx-2">
-                                <h2 className="text-5xl font-bold text-center italic text-[#00e1af]">Send</h2>
-                                <div className="pt-4 mb-4">
-                                    <h2 className='font-medium my-1 text-lg'>Amount:</h2>
-                                    <div className="flex flex-row items-center">
-                                        <span className="mr-2 font-medium text-[#03c9c2] text-lg">{country.currencySymbol}</span>
-                                        <input onChange={(e) => setAmount(parseFloat(e.target.value))} value={amount || 0} className="w-full flex flex-row items-center py-2 px-3 border rounded bg-slate-100" />
-                                    </div>
-                                    {amountError && <p className="text-red-500 text-xs italic">{amountError}</p>}
-                                </div>
-                                <div>
-                                    <h2 className='font-medium my-1 text-lg'>Receiver:</h2>
-                                    <input type="text" onChange={(e) => setReceiver(e.target.value)} value={receiver} className="w-full flex flex-row items-center py-2 px-3 border rounded bg-slate-100" />
-                                    {receiverError && !receiver && <p className="text-red-500 text-xs italic">{receiverError}</p>}
-                                </div>
-                                <div className="flex justify-center items-center my-4">
-                                    <button
-                                        className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                        onClick={() => handleSend()}
-                                    >
-                                        Send
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="col-span-1 mx-2">
-                                <h2 className="text-4xl xse:text-3xl font-bold text-center italic text-[#00d9e1]">Transactions</h2>
-                                <div className="pt-4 mb-4">
-                                    {transactions.slice().reverse().map((transaction, index) =>
-                                        <div key={index} className={`shadow-md border rounded mb-2 mt-4 mx-2 flex flex-row justify-between items-center p-2 border-l-8 ${transaction.receiver === User.userId ? 'border-l-[#49e9ac]' : 'border-l-[#FF0000]'}`}>
-                                            <div>
-                                                <h4 className={`mr-2 text-xl font-medium ${transaction.receiver === User.userId ? 'text-[#49e9ac]' : 'text-[#FF0000]'}`}><span className="font-medium text-[#4cdad5] text-lg">{country.currencySymbol} </span>{convertedPrice(transaction.amount, country.currencyRate)}</h4>
-                                                <h3 className="break-all"><span className="font-medium">Receiver: </span> {transaction.receiver === User.userId? <span className="text-[#8e30d3] font-medium">You</span>: transaction.receiver}</h3>
-                                                <h3 className="break-all"><span className="font-medium">Sender: </span> {transaction.owner === User.userId? <span className="text-[#8e30d3] font-medium">You</span>: transaction.owner}</h3>
-                                                <p className="text-gray-500 text-sm break-all">{transaction.date}</p>
-                                            </div>
+                        <div className="flex flex-row space-x-3 justify-center items-center my-7">
+                            <button onClick={() => setView(View.send)} className={`text-white text-lg font-medium px-3 py-1 rounded ${view === View.send ? 'bg-gray-400' : 'bg-[#00e1af] hover:bg-[#05f1bd]'}`}>Send</button>
+                            <button onClick={() => setView(View.transaction)} className={`text-white text-lg font-medium px-3 py-1 rounded ${view === View.transaction ? 'bg-gray-400' : 'bg-[#00d9e1] hover:bg-[#05edf5]'}`}>Transactions</button>
+                        </div>
+                        <div className="my-3">
+                            {view === View.send ?
+                                <div className="mx-2">
+                                    <h2 className="text-5xl font-bold text-center italic text-[#00e1af]">Send</h2>
+                                    <div className="pt-4 mb-4">
+                                        <h2 className='font-medium my-1 text-lg'>Amount:</h2>
+                                        <div className="flex flex-row items-center">
+                                            <span className="mr-2 font-medium text-[#03c9c2] text-lg">{country.currencySymbol}</span>
+                                            <input onChange={(e) => setAmount(parseFloat(e.target.value))} value={amount || 0} className="w-full flex flex-row items-center py-2 px-3 border rounded bg-slate-100" />
                                         </div>
-                                    )}
+                                        {amountError && <p className="text-red-500 text-xs italic">{amountError}</p>}
+                                    </div>
+                                    <div>
+                                        <h2 className='font-medium my-1 text-lg'>Receiver:</h2>
+                                        <input type="text" onChange={(e) => setReceiver(e.target.value)} value={receiver} className="w-full flex flex-row items-center py-2 px-3 border rounded bg-slate-100" />
+                                        {receiverError && !receiver && <p className="text-red-500 text-xs italic">{receiverError}</p>}
+                                    </div>
+                                    <div className="flex justify-center items-center my-4">
+                                        <button
+                                            className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                            onClick={() => handleSend()}
+                                        >
+                                            Send
+                                        </button>
+                                    </div>
+                                </div> :
+                                <div className="mx-2">
+                                    <h2 className="text-5xl xse:text-3xl font-bold text-center italic text-[#00d9e1]">Transactions</h2>
+                                    <div className="pt-4 mb-4">
+                                        {transactions.slice().reverse().map((transaction, index) =>
+                                            <div key={index} className={`shadow-md border rounded mb-2 mt-4 mx-2 flex flex-row justify-between items-center p-2 border-l-8 ${transaction.receiver === User.userId ? 'border-l-[#49e9ac]' : 'border-l-[#FF0000]'}`}>
+                                                <div>
+                                                    <h4 className={`mr-2 text-xl font-medium ${transaction.receiver === User.userId ? 'text-[#49e9ac]' : 'text-[#FF0000]'}`}><span className="font-medium text-[#4cdad5] text-lg">{country.currencySymbol} </span>{convertedPrice(transaction.amount, country.currencyRate)}</h4>
+                                                    <h3 className="break-all"><span className="font-medium">Receiver: </span> {transaction.receiver === User.userId ? <span className="text-[#8e30d3] font-medium">You</span> : transaction.receiver}</h3>
+                                                    <h3 className="break-all"><span className="font-medium">Sender: </span> {transaction.owner === User.userId ? <span className="text-[#8e30d3] font-medium">You</span> : transaction.owner}</h3>
+                                                    <p className="text-gray-500 text-sm break-all">{transaction.date}</p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
+                            }
                         </div>
                     </div> : create ? <Form handleCreateAccount={handleSend} /> :
                         <div className="flex flex-col justify-center items-center">
