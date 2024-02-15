@@ -37,7 +37,7 @@ const Bank = () => {
     const [create, setCreate] = useState(false);
     const [copied, setCopied] = useState(false);
     const [missingFields, setMissingFields] = useState<string[]>([]);
-    const [view, setView] = useState<View>(View.transaction)
+    const [view, setView] = useState<View>(View.transaction);
 
     useEffect(() => {
         if (amount > 0) {

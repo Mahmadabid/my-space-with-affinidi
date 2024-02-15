@@ -6,6 +6,10 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000, https://pixels-market.vercel.app/');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
+
     const client = await pool.connect();
 
     try {
