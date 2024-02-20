@@ -92,6 +92,10 @@ const Bank = () => {
             setReceiverError('Please enter a receiver');
         }
 
+        if (receiver === User.userId) {
+            setReceiverError('You can not send yourself');
+        }
+
         if (amount <= 0) {
             setAmountError('Please enter amount more than 0');
         }
