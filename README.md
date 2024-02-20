@@ -1,6 +1,6 @@
 # My Space
 
-[Marketplace App](https://my-space-affinidi.vercel.app/)
+[My Space App](https://my-space-affinidi.vercel.app/)
 
 ## Technologies used
 
