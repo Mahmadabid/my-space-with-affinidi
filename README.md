@@ -5,6 +5,7 @@
 ## Technologies used
 
 * Affinidi
+* CockroachDB
 * Nextjs
 * Typescript
 
@@ -52,24 +53,35 @@ Currently Affinidi offers various data points about users and Pixel Marketplace 
     LivenessCheck is used to assign a blue tick checkmark to the user. Verified users will get access to bank.
  
 * **userID**
+ 
     userID is used to assign id to transactions, bookmarks, expenses and todos. userID is also used to access bank.
  
 ### User Experience
 
 User experience is enhanced by autmoatically populating fields. 
 
+#### Bank
 
+[Bank Page](https://my-space-affinidi.vercel.app/bank) populates user information in relevant fields and user can easily create an account in few seconds. It uses most of the affinidi information to ensure authenticated users join. Allowing users to send money and to buy stuff from [Pixel Market](https://pixels-market.vercel.app/).
 
-### Payment
-Two payments methods are supported.
-1. Cash on delivery
-2. [Pixel Bank](https://my-space-affinidi.vercel.app/bank)
+#### Card
 
-##### Pixel Bank
-Pixels Marketplace has integrated Pixel Bank to offer users online payments. Users can view there balance in Pixels Marketplace and directly make payments from here.
+[Card Page](https://my-space-affinidi.vercel.app/card) creates business cards for user. Giving users option to change color of card and text. Fields are added automatically.
 
-### [Profile](https://pixels-market.vercel.app/profile)
+#### Todo
 
-[Code](https://github.com/Mahmadabid/marketplace-affinidi/blob/master/src/pages/profile.tsx)
+[Todo Page](https://my-space-affinidi.vercel.app/todo) creates a todo manager for user. Data is stored on database so user can view and interact with todo on any device.
+
+#### Bookmarks
+
+[Bookmarks Page](https://my-space-affinidi.vercel.app/bookmarks) creates a bookmarks manager for user. Data is stored on database so user can view and interact with bookmarks on any device.
+
+#### Expense Tracker
+
+[Expense Tracker Page](https://my-space-affinidi.vercel.app/expenses) creates a expense tracker for user. Data is stored on database so user can view and interact with expenses on any device.
+
+### [Profile](https://my-space-affinidi.vercel.app/profile)
+
+[Code](https://github.com/Mahmadabid/my-space-with-affinidi/blob/master/src/pages/profile.tsx)
 
 Profile page uses all of the affinidi information to create a profile page for user.
