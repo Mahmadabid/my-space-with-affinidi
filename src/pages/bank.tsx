@@ -82,8 +82,6 @@ const Bank = () => {
     };
 
     const handleSend = async (bank?: string) => {
-        setFetchData(prev => !prev);
-        const balance = calculateBalance();
 
         setReceiverError(null);
         setAmountError(null);
@@ -95,10 +93,16 @@ const Bank = () => {
         if (receiver === User.userId) {
             setReceiverError('You can not send yourself');
         }
-
         if (amount <= 0) {
             setAmountError('Please enter amount more than 0');
         }
+
+        if (receiverError || amountError) {
+            return;
+        }
+
+        setFetchData(prev => !prev);
+        const balance = calculateBalance();
 
         if (balance < amount) {
             setAmountError('You dont have enough balance')
@@ -216,7 +220,7 @@ const Bank = () => {
                                     <div>
                                         <h2 className='font-medium my-1 text-lg'>Receiver:</h2>
                                         <input type="text" onChange={(e) => setReceiver(e.target.value)} value={receiver} className="w-full flex flex-row items-center py-2 px-3 border rounded bg-slate-100" />
-                                        {receiverError && !receiver && <p className="text-red-500 text-xs italic">{receiverError}</p>}
+                                        {receiverError && <p className="text-red-500 text-xs italic">{receiverError}</p>}
                                     </div>
                                     <div className="flex justify-center items-center my-4">
                                         <button

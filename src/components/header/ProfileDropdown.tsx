@@ -28,6 +28,7 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ setLoggingOut, email,
 
     const handleLogout = () => {
         setLoggingOut(true);
+        localStorage.removeItem('country');
         signOut();
     };
 
