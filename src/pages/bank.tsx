@@ -104,7 +104,7 @@ const Bank = () => {
             setAmountError('You dont have enough balance')
         }
 
-        if (receiver && amount > 0 && balance >= amount || bank) {
+        if (receiver && amount > 0 && receiver !== User.userid && balance >= amount || bank) {
             try {
                 setLoading(true);
                 const res = await fetch('api/bank', {
