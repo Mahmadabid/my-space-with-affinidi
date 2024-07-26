@@ -66,7 +66,7 @@ const Home = () => {
           </div>
           <p className="mb-4">Track your expenses and stay within budget using our handy Expense Tracker. Manage your finances with ease. Open them from other devices. Your data is safe with us</p>
           <div className="flex justify-center items-center">
-            <Link href="/expense">
+            <Link href="/expenses">
               <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                 Go to Expense Tracker
               </button>
