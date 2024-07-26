@@ -80,7 +80,7 @@ const Home = () => {
           </div>
           <p className="mb-4">Organize your favorite websites and resources with our Bookmark feature. Never lose track of important links again. Open them from other devices. Your data is safe with us.</p>
           <div className="flex justify-center items-center">
-            <Link href="/bookmark">
+            <Link href="/bookmarks">
               <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                 Go to Bookmarks
               </button>
